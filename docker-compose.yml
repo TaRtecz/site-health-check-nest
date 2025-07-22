@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Пароль для root
+      MYSQL_DATABASE: site_health_db            # Автосоздание БД
+      MYSQL_USER: app_user               # Доп. пользователь (опционально)
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"  # Проброс порта на хост
+    volumes:
+      - mysql_data:/var/lib/mysql  # Сохранение данных
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  mysql_data:  # Персистентное хранилище
